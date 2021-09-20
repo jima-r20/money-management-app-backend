@@ -1,16 +1,20 @@
-import { EntityRepository, Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { SignUpCredentialsDto } from './dto/signup-credentials.dto';
-import { User } from './user.entity';
 import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { EntityRepository, Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+import { User } from './user.entity';
+import { SignUpCredentialsDto } from './dto/signup-credentials.dto';
+import { SignInCredentialsDto } from './dto/signin-credentials.dto';
+import { SignUpResponse } from './interfaces/signup-response.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   // ユーザ登録
-  async signUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<any> {
+  async signUp(
+    signUpCredentialsDto: SignUpCredentialsDto,
+  ): Promise<SignUpResponse> {
     const { userName, email, password } = signUpCredentialsDto;
 
     const user = this.create();
@@ -26,12 +30,27 @@ export class UserRepository extends Repository<User> {
       if (error.code === '23505') {
         throw new ConflictException('This email already registerd');
       } else {
-        throw new InternalServerErrorException(error);
+        throw new InternalServerErrorException();
       }
     }
   }
 
+  // PWハッシュ化
   private async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
+  }
+
+  // ログインユーザ確認　(EmailとPWが正しいか)
+  async validateUserPassword(
+    signInCredentialsDto: SignInCredentialsDto,
+  ): Promise<string | null> {
+    const { email, password } = signInCredentialsDto;
+    const user = await this.findOne({ email });
+
+    if (user && (await user.validatePassword(password))) {
+      return user.email;
+    } else {
+      return null;
+    }
   }
 }
