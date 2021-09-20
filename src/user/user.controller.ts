@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  // ユーザ登録
   @Post('/signup')
   signUp(
     @Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto,
