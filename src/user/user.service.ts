@@ -5,7 +5,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserRepository } from './user.repository';
 import { SignInCredentialsDto } from './dto/signin-credentials.dto';
 import { SignUpCredentialsDto } from './dto/signup-credentials.dto';
-import { SignUpResponse } from './interfaces/signup-response.interface';
+import { UserInformation } from './interfaces/user-information.interface';
 
 @Injectable()
 export class UserService {
@@ -18,7 +18,7 @@ export class UserService {
   // ユーザ登録
   async signUp(
     signUpCredentialsDto: SignUpCredentialsDto,
-  ): Promise<SignUpResponse> {
+  ): Promise<UserInformation> {
     return this.userRepository.signUp(signUpCredentialsDto);
   }
 

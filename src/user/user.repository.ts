@@ -7,14 +7,14 @@ import * as bcrypt from 'bcryptjs';
 import { User } from './user.entity';
 import { SignUpCredentialsDto } from './dto/signup-credentials.dto';
 import { SignInCredentialsDto } from './dto/signin-credentials.dto';
-import { SignUpResponse } from './interfaces/signup-response.interface';
+import { UserInformation } from './interfaces/user-information.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   // ユーザ登録
   async signUp(
     signUpCredentialsDto: SignUpCredentialsDto,
-  ): Promise<SignUpResponse> {
+  ): Promise<UserInformation> {
     const { userName, email, password } = signUpCredentialsDto;
 
     const user = this.create();
