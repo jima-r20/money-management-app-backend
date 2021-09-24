@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { User } from '../user/user.entity';
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
+import { User } from '../user/user.entity';
 import { Category } from './category.entity';
 import { RegistCategoryDto } from './dto/regist-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';

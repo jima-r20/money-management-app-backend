@@ -1,5 +1,3 @@
-import { UserInformation } from '../user/interfaces/user-information.interface';
-import { User } from '..//user/user.entity';
 import {
   BaseEntity,
   Column,
@@ -8,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { User } from '../user/user.entity';
+import { UserInformation } from '../user/interfaces/user-information.interface';
 
 @Entity()
 @Unique(['categoryName'])
