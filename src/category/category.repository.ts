@@ -7,6 +7,20 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {
+  // カテゴリーの全取得
+  async getCategories(user: User): Promise<Category[]> {
+    const { userId } = user;
+    const query = this.findWithInnerJoin();
+
+    try {
+      return await query
+        .where('category.author.userId = :userId', { userId })
+        .getMany();
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   // IDによるカテゴリーの検索
   async getCategoryById(categoryId: number): Promise<Category> {
     const query = this.findWithInnerJoin();
@@ -16,7 +30,7 @@ export class CategoryRepository extends Repository<Category> {
         .where('category.categoryId = :categoryId', { categoryId })
         .getOne();
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
     }
   }
 

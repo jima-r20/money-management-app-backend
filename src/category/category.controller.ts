@@ -26,8 +26,8 @@ export class CategoryController {
 
   // カテゴリーの取得
   @Get()
-  getCategories(): Promise<Category[]> {
-    return this.categoryService.getCategories();
+  getCategories(@GetUser() user: User): Promise<Category[]> {
+    return this.categoryService.getCategories(user);
   }
 
   // カテゴリーの登録

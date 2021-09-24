@@ -17,9 +17,9 @@ export class CategoryService {
     private categoryRepository: CategoryRepository,
   ) {}
 
-  // カテゴリー取得
-  async getCategories(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  // カテゴリーの全取得
+  async getCategories(user: User): Promise<Category[]> {
+    return this.categoryRepository.getCategories(user);
   }
 
   // カテゴリー登録
