@@ -34,10 +34,16 @@ export class ItemValidationPipe implements PipeTransform<any> {
       value.fixedCost = parseInt(value.fixedCost);
     }
 
+    // Bodyに含まれているcategoryIdの値をnumber型に変更
+    if (value.categoryId) {
+      value.categoryId = parseInt(value.categoryId);
+    }
+
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new BadRequestException('Validation failed');
+      // throw new BadRequestException('Validation failed');
+      throw new BadRequestException(errors);
     }
     return value;
   }

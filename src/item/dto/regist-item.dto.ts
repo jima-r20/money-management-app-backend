@@ -13,7 +13,7 @@ export class RegistItemDto {
 
   @IsBoolean()
   @IsNotEmpty()
-  isExpendableds: boolean;
+  isExpendables: boolean;
 
   @IsInt()
   @IsOptional()
@@ -26,4 +26,8 @@ export class RegistItemDto {
   @IsInt()
   @IsOptional()
   fixedCost: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  categoryId: number;
 }

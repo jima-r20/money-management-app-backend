@@ -2,9 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Category } from '../category/category.entity';
 
 @Entity()
 @Unique(['itemName'])
@@ -30,4 +32,11 @@ export class Item extends BaseEntity {
   // 固定費の場合の金額
   @Column()
   fixedCost: number;
+
+  @ManyToOne(
+    type => Category,
+    category => category.registeredItems,
+    { eager: false },
+  )
+  category: Category;
 }
