@@ -23,8 +23,14 @@ export class ItemService {
 
   // アイテムの個別取得
   async getItemById(itemId: number, user: User): Promise<Item> {
-    // return this.itemRepository.getItemById(itemId, user);
-    return null;
+    const { userId } = user;
+    const item = await this.itemRepository.getItemById(itemId);
+
+    if (!item || item.category.author.userId !== userId) {
+      throw new NotFoundException(`Item with ID "${itemId}" is NOT found`);
+    }
+
+    return item;
   }
 
   // アイテムの登録
@@ -47,7 +53,15 @@ export class ItemService {
     updateItemDto: UpdateItemDto,
     user: User,
   ): Promise<Item> {
-    return null;
+    const { userId } = user;
+    const item = await this.itemRepository.getItemById(itemId);
+
+    if (!item || item.category.author.userId !== userId) {
+      if (!item || item.category.author.userId !== userId) {
+        throw new NotFoundException(`Item with ID "${itemId}" is NOT found`);
+      }
+    }
+    return this.itemRepository.updateItem(item, updateItemDto);
   }
 
   // アイテムの削除

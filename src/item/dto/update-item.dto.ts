@@ -7,7 +7,7 @@ export class UpdateItemDto {
 
   @IsBoolean()
   @IsOptional()
-  isExpendableds: boolean;
+  isExpendables: boolean;
 
   @IsInt()
   @IsOptional()

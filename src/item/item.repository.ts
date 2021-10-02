@@ -4,10 +4,11 @@ import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { RegistItemDto } from './dto/regist-item.dto';
 import { Item } from './item.entity';
 import { InternalServerErrorException } from '@nestjs/common';
+import { UpdateItemDto } from './dto/update-item.dto';
 
 @EntityRepository(Item)
 export class ItemRepository extends Repository<Item> {
-  // itemの全取得
+  // アイテムの全取得
   async getItems(user: User): Promise<Item[]> {
     const { userId } = user;
     const query = this.findWithInnerJoin();
@@ -19,7 +20,18 @@ export class ItemRepository extends Repository<Item> {
     }
   }
 
-  // itemの登録
+  // アイテムの個別取得
+  async getItemById(itemId: number): Promise<Item> {
+    const query = this.findWithInnerJoin();
+
+    try {
+      return query.where('item.itemId = :itemId', { itemId }).getOne();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  // アイテムの登録
   async registItem(
     registItemDto: RegistItemDto,
     category: Category,
@@ -43,7 +55,30 @@ export class ItemRepository extends Repository<Item> {
     try {
       return await item.save();
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // アイテムの更新
+  async updateItem(item: Item, updateItemDto: UpdateItemDto): Promise<Item> {
+    const {
+      itemName,
+      isExpendables,
+      depletionPeriod,
+      isFixedCost,
+      fixedCost,
+    } = updateItemDto;
+
+    itemName ? (item.itemName = itemName) : null;
+    item.isExpendables = isExpendables;
+    item.depletionPeriod = item.isExpendables ? depletionPeriod : null; // isExpendablesがfalseなら不要なのでnull
+    item.isFixedCost = isFixedCost;
+    item.fixedCost = item.isFixedCost ? fixedCost : null; // isFixedCostがfalseなら不要なのでnull
+
+    try {
+      return await item.save();
+    } catch (error) {
+      throw new InternalServerErrorException();
     }
   }
 
