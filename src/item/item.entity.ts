@@ -22,7 +22,9 @@ export class Item extends BaseEntity {
   isExpendables: boolean;
 
   // 消耗品の場合、消耗し切るまでの日数
-  @Column()
+  @Column({
+    nullable: true,
+  })
   depletionPeriod: number;
 
   // 固定費かどうか
@@ -30,7 +32,9 @@ export class Item extends BaseEntity {
   isFixedCost: boolean;
 
   // 固定費の場合の金額
-  @Column()
+  @Column({
+    nullable: true,
+  })
   fixedCost: number;
 
   @ManyToOne(
