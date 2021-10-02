@@ -18,8 +18,7 @@ export class ItemService {
 
   // アイテムの全取得
   async getItems(user: User): Promise<Item[]> {
-    // return this.itemRepository.getItems(user);
-    return null;
+    return this.itemRepository.getItems(user);
   }
 
   // アイテムの個別取得

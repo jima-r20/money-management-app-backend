@@ -13,9 +13,7 @@ export class CategoryRepository extends Repository<Category> {
     const query = this.findWithInnerJoin();
 
     try {
-      return await query
-        .where('category.author.userId = :userId', { userId })
-        .getMany();
+      return await query.where('user.userId = :userId', { userId }).getMany();
     } catch (error) {
       throw new InternalServerErrorException();
     }
