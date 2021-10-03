@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -67,4 +68,15 @@ export class RegisterController {
   }
 
   // 登録情報の削除
+  @Delete('/:registrationId')
+  deleteRegister(
+    @Param('registrationId', ParseIntPipe) registrationId: number,
+    @GetUser() user: User,
+  ): Promise<{
+    registrationId: number;
+    paymentDate: Date;
+    paymentAmount: number;
+  }> {
+    return this.registerService.deleteRegister(registrationId, user);
+  }
 }

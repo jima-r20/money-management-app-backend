@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { CategoryRepository } from '../category/category.repository';
@@ -83,4 +87,34 @@ export class RegisterService {
   }
 
   // 登録情報の削除
+  async deleteRegister(
+    registrationId: number,
+    user: User,
+  ): Promise<{
+    registrationId: number;
+    paymentDate: Date;
+    paymentAmount: number;
+  }> {
+    const { userId } = user;
+    const register = await this.registerRepository.getRegisterById(
+      registrationId,
+    );
+
+    if (!register || register.item.category.author.userId !== userId) {
+      throw new NotFoundException(
+        `Register with ID "${registrationId}" is NOT found`,
+      );
+    }
+
+    try {
+      await this.registerRepository.delete({ registrationId });
+      return {
+        registrationId,
+        paymentDate: register.paymentDate,
+        paymentAmount: register.paymentAmount,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
 }
