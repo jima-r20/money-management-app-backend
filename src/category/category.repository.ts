@@ -1,4 +1,7 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Category } from './category.entity';
@@ -69,7 +72,11 @@ export class CategoryRepository extends Repository<Category> {
     try {
       return await category.save();
     } catch (error) {
-      throw new InternalServerErrorException();
+      if (error.code === '23505') {
+        throw new ConflictException('This category already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 

@@ -3,7 +3,10 @@ import { User } from 'src/user/user.entity';
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { RegistItemDto } from './dto/regist-item.dto';
 import { Item } from './item.entity';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UpdateItemDto } from './dto/update-item.dto';
 
 @EntityRepository(Item)
@@ -47,15 +50,19 @@ export class ItemRepository extends Repository<Item> {
     const item = this.create();
     item.itemName = itemName;
     item.isExpendables = isExpendables;
-    item.depletionPeriod = depletionPeriod;
+    item.depletionPeriod = item.isExpendables ? depletionPeriod : null; // isExpendablesがfalseなら不要なのでnull
     item.isFixedCost = isFixedCost;
-    item.fixedCost = fixedCost;
+    item.fixedCost = item.isFixedCost ? fixedCost : null; // isFixedCostがfalseなら不要なのでnull
     item.category = category;
 
     try {
       return await item.save();
     } catch (error) {
-      throw new InternalServerErrorException();
+      if (error.code === '23505') {
+        throw new ConflictException('This item already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryRepository } from '../category/category.repository';
 import { User } from '../user/user.entity';
@@ -61,6 +65,7 @@ export class ItemService {
         throw new NotFoundException(`Item with ID "${itemId}" is NOT found`);
       }
     }
+
     return this.itemRepository.updateItem(item, updateItemDto);
   }
 
@@ -69,6 +74,20 @@ export class ItemService {
     itemId: number,
     user: User,
   ): Promise<{ itemId: number; itemName: string }> {
-    return null;
+    const { userId } = user;
+    const item = await this.itemRepository.getItemById(itemId);
+
+    if (!item || item.category.author.userId !== userId) {
+      if (!item || item.category.author.userId !== userId) {
+        throw new NotFoundException(`Item with ID "${itemId}" is NOT found`);
+      }
+    }
+
+    try {
+      await this.itemRepository.delete({ itemId });
+      return { itemId, itemName: item.itemName };
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 }
