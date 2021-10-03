@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { Category } from '../category/category.entity';
+import { Register } from '../register/register.entity';
 
 @Entity()
 @Unique(['itemName'])
@@ -43,4 +45,10 @@ export class Item extends BaseEntity {
     { eager: false },
   )
   category: Category;
+
+  @OneToMany(
+    type => Register,
+    register => register.item,
+  )
+  registeredOnes: Register[];
 }

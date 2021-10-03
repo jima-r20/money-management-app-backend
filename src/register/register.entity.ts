@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Item } from '../item/item.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Register extends BaseEntity {
@@ -13,4 +20,11 @@ export class Register extends BaseEntity {
 
   @Column()
   depletionDay: Date;
+
+  @ManyToOne(
+    type => Item,
+    item => item.registeredOnes,
+    { eager: false },
+  )
+  item: Item;
 }
