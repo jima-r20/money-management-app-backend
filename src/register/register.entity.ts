@@ -10,7 +10,7 @@ import {
 @Entity()
 export class Register extends BaseEntity {
   @PrimaryGeneratedColumn()
-  resistrationId: number;
+  registrationId: number;
 
   @Column()
   paymentDate: Date;

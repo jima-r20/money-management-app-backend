@@ -19,6 +19,19 @@ export class RegisterRepository extends Repository<Register> {
     }
   }
 
+  // 登録情報の個別取得
+  async getRegisterById(registrationId: number): Promise<Register> {
+    const query = this.findWithInnerJoin();
+
+    try {
+      return query
+        .where('register.registrationId = :registrationId', { registrationId })
+        .getOne();
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   // 新規登録
   async registRegister(
     registRegisterDto: RegistRegisterDto,
@@ -41,7 +54,14 @@ export class RegisterRepository extends Repository<Register> {
   // DB結合をするQuery発行
   private findWithInnerJoin(): SelectQueryBuilder<Register> {
     return this.createQueryBuilder('register')
-      .select(['register', 'item', 'category'])
+      .select([
+        'register',
+        'item',
+        'category',
+        'user.userId',
+        'user.userName',
+        'user.email',
+      ])
       .innerJoin('register.item', 'item')
       .innerJoin('item.category', 'category')
       .innerJoin('category.author', 'user');

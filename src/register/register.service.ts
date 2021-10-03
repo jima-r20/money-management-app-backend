@@ -24,6 +24,20 @@ export class RegisterService {
   }
 
   // 登録情報の個別取得
+  async getRegisterById(registrationId: number, user: User): Promise<Register> {
+    const { userId } = user;
+    const register = await this.registerRepository.getRegisterById(
+      registrationId,
+    );
+
+    if (!register || register.item.category.author.userId !== userId) {
+      throw new NotFoundException(
+        `Register with ID "${registrationId}" is NOT found`,
+      );
+    }
+
+    return register;
+  }
 
   // 月単位取得の取得
 
