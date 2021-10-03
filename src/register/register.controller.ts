@@ -1,6 +1,11 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../user/decorators/get-user.decorator';
+import { User } from '../user/user.entity';
+import { Register } from './register.entity';
 import { RegisterService } from './register.service';
+import { RegistRegisterDto } from './dto/regist-register.dto';
+import { RegisterValidationPipe } from './pipes/registr-validation.pipe';
 
 @Controller('register')
 @UseGuards(AuthGuard())
@@ -18,6 +23,13 @@ export class RegisterController {
   // アイテム単位の登録情報の取得
 
   // 新規登録
+  @Post()
+  registRegister(
+    @Body(RegisterValidationPipe) registRegisterDto: RegistRegisterDto,
+    @GetUser() user: User,
+  ): Promise<Register> {
+    return this.registerService.registRegister(registRegisterDto, user);
+  }
 
   // 登録情報の更新
 

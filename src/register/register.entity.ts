@@ -18,7 +18,9 @@ export class Register extends BaseEntity {
   @Column()
   paymentAmount: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   depletionDay: Date;
 
   @ManyToOne(
