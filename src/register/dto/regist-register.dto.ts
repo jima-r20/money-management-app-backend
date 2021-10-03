@@ -1,4 +1,10 @@
-import { IsDate, IsInt, IsNotEmpty } from 'class-validator';
+import {
+  IsDate,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class RegistRegisterDto {
   @IsDate()
@@ -12,4 +18,8 @@ export class RegistRegisterDto {
   @IsInt()
   @IsNotEmpty()
   itemId: number;
+
+  @IsString()
+  @IsOptional()
+  memo: string;
 }

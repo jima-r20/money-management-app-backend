@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -13,7 +14,8 @@ import { User } from '../user/user.entity';
 import { Register } from './register.entity';
 import { RegisterService } from './register.service';
 import { RegistRegisterDto } from './dto/regist-register.dto';
-import { RegisterValidationPipe } from './pipes/registr-validation.pipe';
+import { RegisterValidationPipe } from './pipes/register-validation.pipe';
+import { UpdateRegisterDto } from './dto/update-register.dto';
 
 @Controller('register')
 @UseGuards(AuthGuard())
@@ -51,6 +53,18 @@ export class RegisterController {
   }
 
   // 登録情報の更新
+  @Patch('/:registrationId')
+  updateRegister(
+    @Param('registrationId', ParseIntPipe) registrationId: number,
+    @Body(RegisterValidationPipe) updateRegisterDto: UpdateRegisterDto,
+    @GetUser() user: User,
+  ): Promise<Register> {
+    return this.registerService.updateRegister(
+      registrationId,
+      updateRegisterDto,
+      user,
+    );
+  }
 
   // 登録情報の削除
 }

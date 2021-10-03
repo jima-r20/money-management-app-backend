@@ -21,7 +21,12 @@ export class Register extends BaseEntity {
   @Column({
     nullable: true,
   })
-  depletionDay: Date;
+  depletionDate: Date;
+
+  @Column({
+    nullable: true,
+  })
+  memo: string;
 
   @ManyToOne(
     type => Item,

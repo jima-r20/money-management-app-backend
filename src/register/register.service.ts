@@ -6,6 +6,7 @@ import { ItemRepository } from '../item/item.repository';
 import { Register } from './register.entity';
 import { RegistRegisterDto } from './dto/regist-register.dto';
 import { RegisterRepository } from './register.repository';
+import { UpdateRegisterDto } from './dto/update-register.dto';
 
 @Injectable()
 export class RegisterService {
@@ -62,6 +63,24 @@ export class RegisterService {
   }
 
   // 登録情報の更新
+  async updateRegister(
+    registrationId: number,
+    updateRegisterDto: UpdateRegisterDto,
+    user: User,
+  ): Promise<Register> {
+    const { userId } = user;
+    const register = await this.registerRepository.getRegisterById(
+      registrationId,
+    );
+
+    if (!register || register.item.category.author.userId !== userId) {
+      throw new NotFoundException(
+        `Register with ID "${registrationId}" is NOT found`,
+      );
+    }
+
+    return this.registerRepository.updateRegister(updateRegisterDto, register);
+  }
 
   // 登録情報の削除
 }

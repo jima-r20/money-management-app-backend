@@ -24,6 +24,11 @@ export class RegisterValidationPipe implements PipeTransform<any> {
       value.paymentAmount = parseInt(value.paymentAmount);
     }
 
+    // Bodyに含まれているdepletionDateの値をDate型に変更
+    if (value.depletionDate) {
+      value.depletionDate = new Date(value.depletionDate);
+    }
+
     // Bodyに含まれているitemIdの値をnumber型に変更
     if (value.itemId) {
       value.itemId = parseInt(value.itemId);
