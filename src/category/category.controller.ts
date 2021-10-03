@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';

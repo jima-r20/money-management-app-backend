@@ -1,6 +1,9 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import { User } from '../user/user.entity';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
+import { User } from '../user/user.entity';
 import { Category } from './category.entity';
 import { RegistCategoryDto } from './dto/regist-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -13,9 +16,7 @@ export class CategoryRepository extends Repository<Category> {
     const query = this.findWithInnerJoin();
 
     try {
-      return await query
-        .where('category.author.userId = :userId', { userId })
-        .getMany();
+      return await query.where('user.userId = :userId', { userId }).getMany();
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -71,7 +72,11 @@ export class CategoryRepository extends Repository<Category> {
     try {
       return await category.save();
     } catch (error) {
-      throw new InternalServerErrorException();
+      if (error.code === '23505') {
+        throw new ConflictException('This category already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
