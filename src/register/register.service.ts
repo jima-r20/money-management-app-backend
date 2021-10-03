@@ -19,6 +19,9 @@ export class RegisterService {
   ) {}
 
   // 登録情報の全取得
+  async getRegisters(user: User): Promise<Register[]> {
+    return this.registerRepository.getRegisters(user);
+  }
 
   // 登録情報の個別取得
 

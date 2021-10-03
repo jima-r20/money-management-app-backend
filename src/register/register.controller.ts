@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../user/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
@@ -13,6 +13,10 @@ export class RegisterController {
   constructor(private registerService: RegisterService) {}
 
   // 登録情報の全取得
+  @Get()
+  getRegisters(@GetUser() user: User): Promise<Register[]> {
+    return this.registerService.getRegisters(user);
+  }
 
   // 登録情報の個別取得
 

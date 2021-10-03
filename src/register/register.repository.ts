@@ -1,4 +1,5 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
+import { User } from '../user/user.entity';
 import { Item } from '../item/item.entity';
 import { Register } from './register.entity';
 import { RegistRegisterDto } from './dto/regist-register.dto';
@@ -6,6 +7,18 @@ import { InternalServerErrorException } from '@nestjs/common';
 
 @EntityRepository(Register)
 export class RegisterRepository extends Repository<Register> {
+  // 登録情報の全取得
+  async getRegisters(user: User): Promise<Register[]> {
+    const { userId } = user;
+    const query = this.findWithInnerJoin();
+
+    try {
+      return await query.where('user.userId = :userId', { userId }).getMany();
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   // 新規登録
   async registRegister(
     registRegisterDto: RegistRegisterDto,
@@ -23,5 +36,14 @@ export class RegisterRepository extends Repository<Register> {
     } catch (error) {
       throw new InternalServerErrorException();
     }
+  }
+
+  // DB結合をするQuery発行
+  private findWithInnerJoin(): SelectQueryBuilder<Register> {
+    return this.createQueryBuilder('register')
+      .select(['register', 'item', 'category'])
+      .innerJoin('register.item', 'item')
+      .innerJoin('item.category', 'category')
+      .innerJoin('category.author', 'user');
   }
 }

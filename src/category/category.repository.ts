@@ -81,7 +81,7 @@ export class CategoryRepository extends Repository<Category> {
   }
 
   // DB結合を行ってからselectするQuery発行
-  findWithInnerJoin(): SelectQueryBuilder<Category> {
+  private findWithInnerJoin(): SelectQueryBuilder<Category> {
     return this.createQueryBuilder('category')
       .select(['category', 'user.userId', 'user.userName', 'user.email'])
       .innerJoin('category.author', 'user');

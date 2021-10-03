@@ -19,7 +19,7 @@ export class ItemRepository extends Repository<Item> {
     try {
       return await query.where('user.userId = :userId', { userId }).getMany();
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -30,7 +30,7 @@ export class ItemRepository extends Repository<Item> {
     try {
       return query.where('item.itemId = :itemId', { itemId }).getOne();
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -90,7 +90,7 @@ export class ItemRepository extends Repository<Item> {
   }
 
   // DB結合をするQuery発行
-  findWithInnerJoin(): SelectQueryBuilder<Item> {
+  private findWithInnerJoin(): SelectQueryBuilder<Item> {
     return this.createQueryBuilder('item')
       .select([
         'item',
